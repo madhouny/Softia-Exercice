@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Exercice</title>
+</head>
+<body>
+<div align="center">
+  <h1> Softia Formulaire</h1>
+
+    <form action="#"
+          th:action="@{/attestation/add}"
+          th:object="${attestation}"
+          method="post">
+        <label for="name">Name</label>
+        <select id="name" onchange="getValue()";
+        >
+            <option th:each="etudiant : ${etudiants}"
+                    th:text="${etudiant.nomPrenom}"
+                    th:value="${etudiant.nomConvention}"
+                    th:attr="data-hours=${etudiant.convention.nbHeur}, data-id=${etudiant.idEtudiant}"
+                    >
+            </option>
+        </select>
+        <label for="convention"></label>
+        <input type="text"  id="convention" disabled>
+
+        <input type="hidden"  id="idEtudiant" name="idEtudiant">
+
+        <textarea id="attestation" name="attestation" th:text = "${message}">
+            Bonjour #NOM_ETUDIANT# #PRENOM_ETUDIANT#,
+            Vous avez suivi #nbHeur# de formation chez FormationPlus.
+            Pouvez-vous nous retourner ce mail avec la pièce jointe signée.
+            Cordialement,
+            FormationPlus
+            </textarea>
+        <button type="submit" name="action" value="Envoyer">Submit</button>
+
+    </form>
+</div>
+
+<script type="text/javascript">
+ function getValue() {
+				var select = document.getElementById('name');
+				var option = select.options[select.selectedIndex];
+				console.log(option.getAttribute("data-hours"));
+				document.getElementById('convention').value = option.value;
+
+				    var message = " Bonjour #NOM_ETUDIANT# #PRENOM_ETUDIANT#, \n" +
+                   " Vous avez suivi #nbHeur# de formation chez FormationPlus. \n"+
+                   " Pouvez-vous nous retourner ce mail avec la pièce jointe signée.\n" +
+                   " Cordialement, \n" +
+                  " FormationPlus \n";
+
+                document.getElementById('idEtudiant').value = option.getAttribute("data-id");
+                document.getElementById('attestation').value = message;
+				document.getElementById('attestation').value = document.getElementById('attestation').value.replace("#NOM_ETUDIANT# #PRENOM_ETUDIANT#", option.text);
+				document.getElementById('attestation').value =document.getElementById('attestation').value.replace("#nbHeur#", option.getAttribute("data-hours"));
+				}
+
+			getValue();
+</script>
+
+</body>
+</html>
